@@ -1,8 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const yup = require("yup");
-const js_yaml_1 = require("js-yaml");
-const jp = require("jsonpath");
 const yupMap = {
     string: yup.string,
     number: yup.number,
@@ -90,7 +88,7 @@ const generateSingleValidator = ({ line, validations, validationName, schema, da
 const createSchema = ({ line, dataType, attribute, attributeName, validations }) => {
     line++;
     if ((dataType === "object") || (!yupMap[dataType])) {
-        return exports.jsonToSchema(attribute);
+        return jsonToSchema(attribute);
     }
     else {
         let schema = yupMap[dataType]();
@@ -110,7 +108,7 @@ const createSchema = ({ line, dataType, attribute, attributeName, validations })
         return schema;
     }
 };
-exports.jsonToSchema = (js, line = 2) => {
+const jsonToSchema_ = (js, line = 2) => {
     let validator = {};
     Object.keys(js)
         .forEach(attributeName => {
@@ -130,37 +128,10 @@ exports.jsonToSchema = (js, line = 2) => {
     });
     return yup.object().shape(validator);
 };
-exports.yamlToJson = (dataYaml, config) => {
-    const { noWarnings } = config || {};
-    return js_yaml_1.load(dataYaml, {
-        onWarning(e) {
-            noWarnings && console.warn(e);
-        }
-    });
-};
-exports.yamlToSchema = (yaml, config) => {
-    const json = exports.yamlToJson(yaml, config);
-    return exports.jsonToSchema(json);
-};
-exports.yamlToSchemaWithData = (validationYaml, dataYaml, config) => {
-    const pathsRx = new RegExp("(value|list)=([\\$\\.\\S]*)", 'g');
-    const data = js_yaml_1.load(dataYaml);
-    const matches = [...validationYaml.matchAll(pathsRx)];
-    matches.forEach(groups => {
-        const path = new RegExp(groups[0].replace('$.', '\\$\\.'), 'g');
-        const value = groups[0].startsWith('value=') ?
-            jp.value(data, groups[0].replace('value=', '')) :
-            jp.query(data, groups[0].replace('list=', ''));
-        if (value === undefined)
-            throw new ValidatorException(`No value found for ${groups[0]}`);
-        validationYaml = validationYaml.replace(path, JSON.stringify(value));
-    });
-    return exports.yamlToJson(validationYaml, config);
+const jsonToSchema = (js) => {
+    return jsonToSchema_(js);
 };
 exports.default = {
-    yamlToSchema: exports.yamlToSchema,
-    jsonToSchema: exports.jsonToSchema,
-    yamlToJson: exports.yamlToJson,
-    yamlToSchemaWithData: exports.yamlToSchemaWithData
+    jsonToSchema
 };
 //# sourceMappingURL=index.js.map

@@ -1,6 +1,6 @@
 {
   "name": "json-to-yup",
-  "version": "0.0.3",
+  "version": "0.0.2",
   "description": "JSON to Yup or Yup as config lets you save Yup validation as YAML or JSON.",
   "main": "index.js",
   "types": "index.d.ts",
