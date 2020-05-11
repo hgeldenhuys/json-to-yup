@@ -1,0 +1,40 @@
+{
+  "name": "json-to-yup",
+  "version": "0.0.1",
+  "description": "JSON to Yup or Yup as config lets you save Yup validation as YAML or JSON.",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "mocha -r ts-node/register test/*.test.ts",
+    "publish npm": "npm --no-git-tag-version version patch; cd dist; npm publish",
+    "build": "tsc",
+    "cleanup": "rm -Rf dist; mkdir dist; cd dist; ln -s ../package.json"
+  },
+  "keywords": [
+    "yup",
+    "json"
+  ],
+  "author": "Herman Geldenhuys",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hgeldenhuys/json-to-yup"
+  },
+  "homepage": "https://github.com/hgeldenhuys/json-to-yup",
+  "dependencies": {
+    "@types/node": "^13.13.5",
+    "mocha": "^7.1.2",
+    "typescript": "^3.8.3",
+    "yup": "^0.28.5"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^7.0.2",
+    "@types/yup": "^0.28.1",
+    "chai": "^4.2.0",
+    "nyc": "^15.0.1",
+    "ts-mocha": "^7.0.0",
+    "ts-node": "^8.10.1"
+  }
+}
