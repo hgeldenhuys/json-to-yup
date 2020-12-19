@@ -1,12 +1,10 @@
 import * as yup from "yup";
-import { ObjectSchema } from "yup";
-export declare type HashMap = {
-    [key: string]: HashMap | string | number | RegExp | boolean | ObjectSchema;
-};
-export declare class ValidatorException extends Error {
-}
+import { JsonSchema } from "./schema";
+export declare const jsonToYup: (js: JsonSchema) => yup.ObjectSchema<object & {
+    [x: string]: any;
+}>;
 declare const _default: {
-    jsonToSchema: (js: HashMap) => yup.ObjectSchema<object & {
+    jsonToYup: (js: JsonSchema) => yup.ObjectSchema<object & {
         [x: string]: any;
     }>;
 };

@@ -1,50 +1,46 @@
 # JSON to YUP
 
-Write your YUP validation as computer-friendly JSON.
+## Installation
 
     yarn add json-to-yup
-    
-## Use cases
+/
 
-### Non-technical people writing validation
+    npm install json-to-yup
 
-### Code-safe yup injection
+## What is Yup?
+YUP is an amazing library for validation of object shapes.
 
+## What does this library do?
+This library saves YUP validation schemas in plain Json objects.
 
-### Example
+Typescript types are included so that you can write them by hand with autocompletion.
 
-`Validation JSON`
-```json
-{
-  "marketingConsent": {
-    "boolean": true
+## Example:
+`Schema JSON`:
+```typescript
+const schema: JsonSchema = {
+  marketingConsent: {
+    type: "boolean",
   },
-  "email": {
-    "string": {
-      "nullable": true,
-      "lowercase": true,
-      "email": "This is not a valid email format",
-      "when": {
-        "this": "marketingConsent",
-        "is": true,
-        "then": {
-          "string": {
-            "lowercase": true,
-            "required": "Please supply your email if you want us to market to you"
-          }
-        },
-        "otherwise": {
-          "string": {
-            "notRequired": true
-          }
-        }
-      }
-    }
-  }
-}
+  email: {
+    type: "string",
+    nullable: true,
+    lowercase: true,
+    email: "This is not a valid email format",
+    when: {
+      anyOf: ["marketingConsent"],
+      is: true,
+      then: {
+        type: "string",
+        lowercase: true,
+        required: "Please supply your email if you want us to market to you",
+      },
+    },
+  },
+};
 ```
 
-`Data JSON`
+`Data JSON`:
 ```json
 {
   "marketingConsent": true,
@@ -52,14 +48,13 @@ Write your YUP validation as computer-friendly JSON.
 }
 ```
 
-`Result`
-```typescript
-import expect;
-import jsonToSchema;
-const yupYaml = "Validation YAML above";
-const VALID_DATA = "Data YAML above";
+`Result`"
 
-expect(jsonToSchema(yupYaml).isValidSync(VALID_DATA)).equals(true);
+```typescript
+import {jsonToYup} from "json-to-yup";
+import data from "./data.json";
+
+jsonToYup(schema).isValidSync(data);
 ```
 
-# 
+
