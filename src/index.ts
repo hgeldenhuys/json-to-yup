@@ -14,11 +14,21 @@ const yupMap: { [key: string]: () => any } = {
 };
 
 const yupSchema = (attribute: JsonType) => {
+  if (!yupMap[attribute.type])
+    throw new Error(`No type found in ${JSON.stringify(attribute)}`);
   let yupFn = yupMap[attribute.type]();
   Object.keys(attribute).forEach((property) => {
     const value = (attribute as any)[property];
     switch (property) {
       case "type": {
+        break;
+      }
+      case "of": {
+        if (value.type === "object") {
+          yupFn = yupFn.of(jsonToYup(value.shape));
+        } else {
+          yupFn = yupFn.of(yupSchema(value));
+        }
         break;
       }
       case "when": {

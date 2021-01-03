@@ -15,7 +15,9 @@
         "noImplicitAny": true,
         "strictPropertyInitialization": true,
         "outDir": "dist",
-        "declaration": true
+        "declaration": true,
+        "moduleResolution": "Node",
+        "allowJs": true
     },
     "exclude": [
         "node_modules"

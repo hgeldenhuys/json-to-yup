@@ -2,6 +2,7 @@ import "mocha";
 import { JsonSchema } from "../src/schema";
 import { jsonToYup } from "../src/";
 import { expect } from "chai";
+import { array } from "yup";
 
 const yupYaml: JsonSchema = {
   marketingConsent: {
@@ -39,6 +40,83 @@ const yupYaml: JsonSchema = {
     },
   },
 };
+
+describe(`validate a array of string`, () => {
+  it(`must be valid and not numbers`, async () => {
+    const VALID_DATA = { names: ["Jack", "John"] };
+    const yupYamlString: JsonSchema = {
+      names: {
+        type: "array",
+        of: {
+          type: "string",
+        },
+      },
+    };
+    const yupYamlNumber: JsonSchema = {
+      names: {
+        type: "array",
+        of: {
+          type: "number",
+        },
+      },
+    };
+    try {
+      jsonToYup(yupYamlString)
+        .validate(VALID_DATA)
+        .catch((err) => {
+          console.error(err);
+        });
+      jsonToYup(yupYamlNumber)
+        .validate(VALID_DATA)
+        .catch((err) => {
+          // console.error(err.message);
+          expect(err.message).equals(
+            'names[0] must be a `number` type, but the final value was: `NaN` (cast from the value `"Jack"`).'
+          );
+        });
+    } catch (err) {
+      console.error(err);
+    }
+    expect(jsonToYup(yupYamlString).isValidSync(VALID_DATA)).equals(true);
+    expect(jsonToYup(yupYamlNumber).isValidSync(VALID_DATA)).equals(false);
+  });
+});
+
+describe(`validate a array of objects`, () => {
+  it(`must be valid`, async () => {
+    const VALID_DATA = { people: [{ name: "Jack", age: 20 }] };
+    const yupYamlString: JsonSchema = {
+      people: {
+        type: "array",
+        of: {
+          type: "object",
+          shape: {
+            name: {
+              type: "string",
+            },
+            age: {
+              type: "number",
+            },
+          },
+        },
+      },
+    };
+    try {
+      // const start = Date.now();
+      // for (let x = 0; x < 10000; x++) {
+      jsonToYup(yupYamlString)
+        .validate(VALID_DATA)
+        .catch((err) => {
+          console.error(err);
+        });
+      // }
+      // console.log("TIME", Date.now() - start);
+    } catch (err) {
+      console.error(err);
+    }
+    expect(jsonToYup(yupYamlString).isValidSync(VALID_DATA)).equals(true);
+  });
+});
 
 describe(`validate a good email`, () => {
   it(`must be valid in`, async () => {

@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { JsonSchema } from "./schema";
+import { JsonSchema } from "@/schema";
 export declare const jsonToYup: (js: JsonSchema) => yup.ObjectSchema<object & {
     [x: string]: any;
 }>;

@@ -18,6 +18,10 @@ const yupSchema = (attribute) => {
             case "type": {
                 break;
             }
+            case "of": {
+                yupFn = yupFn.of(yupSchema(attribute).of);
+                break;
+            }
             case "when": {
                 const when = attribute[property];
                 const then = when.then ? yupSchema(when.then) : undefined;
